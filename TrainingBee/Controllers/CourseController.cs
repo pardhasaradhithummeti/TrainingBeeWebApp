@@ -5,10 +5,12 @@ using TrainingBee.Services;
 
 namespace TrainingBee.Controllers
 {
+
     [Authorize]
     public class CourseController : Controller
     {
         CourseService courseService = null;
+        //injecting the course service instance
         public CourseController(CourseService service)
         {
             courseService = service;
