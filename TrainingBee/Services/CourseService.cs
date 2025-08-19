@@ -71,5 +71,24 @@ namespace TrainingBee.Services
             }
             return courses;
         }
+
+        public async Task UpdateCourseAsync(int id, CourseDTO Coursedto)
+        {
+            string Newurl = url + "/" + id;
+            string data = JsonSerializer.Serialize(Coursedto);
+
+            StringContent content = new StringContent(data, System.Text.Encoding.UTF8, "application/json");
+
+            using (var client = new HttpClient())
+            {
+                using (var response = await client.PutAsync(Newurl, content))
+                {
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        throw new Exception("Course Update Failed: " + response.StatusCode);
+                    }
+                }
+            }
+        }
     }
 }

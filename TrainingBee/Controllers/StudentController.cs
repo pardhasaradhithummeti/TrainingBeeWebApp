@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors.Infrastructure;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TrainingBee.Models;
@@ -6,6 +7,7 @@ using TrainingBee.Services;
 
 namespace TrainingBee.Controllers
 {
+    [Authorize]
     public class StudentController : Controller
     {
         StudentService studentService = null;
@@ -15,11 +17,13 @@ namespace TrainingBee.Controllers
             studentService = s;
             courseService = c;
         }
+        [Authorize(Roles ="Admin,User")]
         public async Task<IActionResult> Index()
         {
             var courseList = await studentService.GetStudentsAsync();
             return View(courseList);
         }
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Details(int id)
         {
             var student = await studentService.GetStudentsByRollNoAsync(id);
@@ -32,6 +36,7 @@ namespace TrainingBee.Controllers
             SelectList list = new SelectList(courseList , "CourseId" , "CourseName");
             return list;
         }
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Create()
         {
             ViewBag.Courses =await GetCourses();
@@ -50,5 +55,6 @@ namespace TrainingBee.Controllers
             ViewBag.Courses = await GetCourses();
             return View();
         }
+       
     }
 }

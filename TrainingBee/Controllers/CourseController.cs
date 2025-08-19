@@ -27,7 +27,9 @@ namespace TrainingBee.Controllers
             var course = await courseService.GetCoursesByIdAsync(id);
             return View(course);
         }
-        [Authorize(Roles = "Admin")]
+
+        [Authorize]
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             return View();
@@ -42,5 +44,28 @@ namespace TrainingBee.Controllers
             }
             return View();
         }
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+
+            var course = await courseService.GetCoursesByIdAsync(id);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            return View(course);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, CourseDTO courseDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                await courseService.UpdateCourseAsync(id, courseDTO);
+                return RedirectToAction("Index");
+            }
+            return View(courseDTO);
+        }
+
     }
 }
